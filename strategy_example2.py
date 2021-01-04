@@ -8,7 +8,7 @@ class Client:
     The Client defines the interface of interest to clients.
     """
 
-    def __init__(self, strategy: Strategy) -> None:
+    def __init__(self, strategy: IStrategy) -> None:
         """
         Usually, the Client accepts a strategy through the constructor, but
         also provides a setter to change it at runtime.
@@ -17,7 +17,7 @@ class Client:
         self._strategy = strategy
 
     @property
-    def strategy(self) -> Strategy:
+    def strategy(self) -> IStrategy:
         """
         The Client maintains a reference to one of the Strategy objects. The
         Client does not know the concrete class of a strategy. It should work
@@ -27,7 +27,7 @@ class Client:
         return self._strategy
 
     @strategy.setter
-    def strategy(self, strategy: Strategy) -> None:
+    def strategy(self, strategy: IStrategy) -> None:
         """
         Usually, the Client allows replacing a Strategy object at runtime.
         """
@@ -49,7 +49,9 @@ class Client:
         # ...
 
 
-class Strategy(ABC):
+class IStrategy(ABC):
+    """Interface."""
+
     """
     The Strategy interface declares operations common to all supported versions
     of some algorithm.
@@ -69,12 +71,12 @@ interface. The interface makes them interchangeable in the Client.
 """
 
 
-class ConcreteStrategyA(Strategy):
+class ConcreteStrategyA(IStrategy):
     def do_algorithm(self, data: List) -> List:
         return sorted(data)
 
 
-class ConcreteStrategyB(Strategy):
+class ConcreteStrategyB(IStrategy):
     def do_algorithm(self, data: List) -> List:
         return reversed(sorted(data))
 

@@ -1,53 +1,43 @@
-from abc import abstractmethod, ABCMeta  # Python's built-in abstract class library
+from abc import abstractmethod, ABC  # Python's built-in abstract class library
 
 """
 https://medium.com/@sheikhsajid/design-patterns-in-python-part-1-the-strategy-pattern-54b24897233e
 """
 
 
-class QuackStrategyAbstract(object):
-    """
-    abstract base class AKA ABC
-
-    Abstract base classes complement duck-typing by providing a way to define interfaces.
-    ABCs introduce virtual subclasses, which are classes that don’t inherit from a
-    class but are still recognized by isinstance() and issubclass().
-    """
-    __metaclass__ = ABCMeta
-    """
-    ABCMeta = Metaclass for defining Abstract Base Classes (ABCs).
-    
-    Use this metaclass to create an ABC.
-    An ABC can be subclassed directly, and then acts as a mix-in class.
-    You can also register unrelated concrete classes (even built-in classes)
-    and unrelated ABCs as “virtual subclasses”
-    """
+class IQuackStrategyAbstract(ABC):
+    """Quack Strategy Interface."""
 
     @abstractmethod
-    def quack(self):
-        """Required Method"""
+    def quack(self) -> None:
+        """Required Method."""
+        pass
 
 
-class LoudQuackStrategy(QuackStrategyAbstract):
-    def quack(self):
+class LoudQuackStrategy(IQuackStrategyAbstract):
+    """Loud quack."""
+    def quack(self) -> None:
         print("QUACK! QUACK!!")
 
 
-class GentleQuackStrategy(QuackStrategyAbstract):
-    def quack(self):
+class GentleQuackStrategy(IQuackStrategyAbstract):
+    """Normal quack."""
+    def quack(self) -> None:
         print("quack!")
 
 
-class LightStrategyAbstract(object):
-    __metaclass__ = ABCMeta
+class ILightStrategyAbstract(ABC):
+    """Light Strategy Interface."""
 
     @abstractmethod
-    def lights_on(self):
-        """Required Method"""
+    def lights_on(self) -> None:
+        """Required Method."""
+        pass
 
 
-class OnForTenSecondsStrategy(LightStrategyAbstract):
-    def lights_on(self):
+class OnForTenSecondsStrategy(ILightStrategyAbstract):
+    """Lights on."""
+    def lights_on(self) -> None:
         print("Lights on for 10 seconds")
 
 
@@ -57,46 +47,56 @@ ten_seconds = OnForTenSecondsStrategy()
 
 
 class Duck(object):
+    """The Duck class."""
     def __init__(self, quack_strategy, light_strategy):
         self._quack_strategy = quack_strategy
         self._light_strategy = light_strategy
 
-    def quack(self):
+    def quack(self) -> None:
         self._quack_strategy.quack()
 
-    def lights_on(self):
+    def lights_on(self) -> None:
         self._light_strategy.lights_on()
 
 
 # Types of Ducks
 class VillageDuck(Duck):
+    """Specific duck class."""
     def __init__(self):
         super(VillageDuck, self).__init__(loud_quack, None)
 
-    def go_home(self):
+    @staticmethod
+    def go_home() -> None:
         print("Going to the river")
 
 
 class ToyDuck(Duck):
+    """Specific duck class."""
     def __init__(self):
         super(ToyDuck, self).__init__(gentle_quack, ten_seconds)
 
 
 class CityDuck(Duck):
+    """Specific duck class."""
     def __init__(self):
         super(CityDuck, self).__init__(gentle_quack, None)
 
-    def go_home(self):
+    @staticmethod
+    def go_home() -> None:
         print("Going to the Central Park pond")
 
 
 class RobotDuck(Duck):
+    """Specific duck class."""
     def __init__(self):
         super(RobotDuck, self).__init__(loud_quack, ten_seconds)
 
 
 # Note: Calling lights_on() on CityDuck or VillageDuck will result in AttributeError
 robo = RobotDuck()
-
 robo.quack()  # QUACK! QUACK!!
 robo.lights_on()  # Lights on for 10 seconds
+
+city = CityDuck()
+city.quack()
+city.go_home()
