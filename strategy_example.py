@@ -1,98 +1,102 @@
-from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import List
+from abc import abstractmethod, ABCMeta  # Python's built-in abstract class library
+
+"""
+https://medium.com/@sheikhsajid/design-patterns-in-python-part-1-the-strategy-pattern-54b24897233e
+"""
 
 
-class Duck:
-    def __init__(self, strategy: IQuackBehaviour) -> None:
-        self._strategy = strategy
+class QuackStrategyAbstract(object):
+    """
+    abstract base class AKA ABC
 
-    @property
-    def strategy(self) -> IQuackBehaviour:
-        return self._strategy
-
-    @strategy.setter
-    def strategy(self, strategy: IQuackBehaviour) -> None:
-        self._strategy = strategy
-
-    def do_some_business_logic(self) -> None:
-        """
-        The Client delegates some work to the Strategy object instead of
-        implementing multiple versions of the algorithm on its own.
-        """
-
-        print("Client:")
-        result = self._strategy.quack()
-
-
-class IQuackBehaviour(ABC):
+    Abstract base classes complement duck-typing by providing a way to define interfaces.
+    ABCs introduce virtual subclasses, which are classes that don’t inherit from a
+    class but are still recognized by isinstance() and issubclass().
+    """
+    __metaclass__ = ABCMeta
+    """
+    ABCMeta = Metaclass for defining Abstract Base Classes (ABCs).
+    
+    Use this metaclass to create an ABC.
+    An ABC can be subclassed directly, and then acts as a mix-in class.
+    You can also register unrelated concrete classes (even built-in classes)
+    and unrelated ABCs as “virtual subclasses”
+    """
 
     @abstractmethod
-    def quack(self) -> None:
-        pass
+    def quack(self):
+        """Required Method"""
 
 
-class IFlyBehaviour(ABC):
+class LoudQuackStrategy(QuackStrategyAbstract):
+    def quack(self):
+        print("QUACK! QUACK!!")
+
+
+class GentleQuackStrategy(QuackStrategyAbstract):
+    def quack(self):
+        print("quack!")
+
+
+class LightStrategyAbstract(object):
+    __metaclass__ = ABCMeta
 
     @abstractmethod
-    def fly(self) -> None:
-        pass
+    def lights_on(self):
+        """Required Method"""
 
 
-class IDisplayBehaviour(ABC):
-
-    @abstractmethod
-    def display(self) -> None:
-        pass
+class OnForTenSecondsStrategy(LightStrategyAbstract):
+    def lights_on(self):
+        print("Lights on for 10 seconds")
 
 
-class DisplayAsTextStrategy(IDisplayBehaviour):
-
-    # concrete stratge
-    def display(self) -> None:
-        print("*text*")
+loud_quack = LoudQuackStrategy()
+gentle_quack = GentleQuackStrategy()
+ten_seconds = OnForTenSecondsStrategy()
 
 
-class DisplayAsGraphicsStrategy(IDisplayBehaviour):
-    def display(self) -> None:
-        print("*graphic*")
+class Duck(object):
+    def __init__(self, quack_strategy, light_strategy):
+        self._quack_strategy = quack_strategy
+        self._light_strategy = light_strategy
+
+    def quack(self):
+        self._quack_strategy.quack()
+
+    def lights_on(self):
+        self._light_strategy.lights_on()
 
 
-class SimpleFlyStrategy(IFlyBehaviour):
-    def fly(self) -> None:
-        print("*flatter...flatter*")
+# Types of Ducks
+class VillageDuck(Duck):
+    def __init__(self):
+        super(VillageDuck, self).__init__(loud_quack, None)
+
+    def go_home(self):
+        print("Going to the river")
 
 
-class JetFlyStrategy(IFlyBehaviour):
-    def fly(self) -> None:
-        print("*zischhhhhhh*")
+class ToyDuck(Duck):
+    def __init__(self):
+        super(ToyDuck, self).__init__(gentle_quack, ten_seconds)
 
 
-class NoFlyStrategy(IFlyBehaviour):
-    def fly(self) -> None:
-        print("*zirp*")
+class CityDuck(Duck):
+    def __init__(self):
+        super(CityDuck, self).__init__(gentle_quack, None)
+
+    def go_home(self):
+        print("Going to the Central Park pond")
 
 
-class SimpleQuackStrategy(IQuackBehaviour):
-    def quack(self) -> None:
-        print("Quack")
+class RobotDuck(Duck):
+    def __init__(self):
+        super(RobotDuck, self).__init__(loud_quack, ten_seconds)
 
 
-class NoQuackStrategy(IQuackBehaviour):
-    def quack(self) -> None:
-        print("*zirp...zirp*")
+# Note: Calling lights_on() on CityDuck or VillageDuck will result in AttributeError
+robo = RobotDuck()
 
-
-if __name__ == "__main__":
-    # The client code picks a concrete strategy and passes it to the context.
-    # The client should be aware of the differences between strategies in order
-    # to make the right choice.
-
-    city_duck = Duck(SimpleQuackStrategy())
-    print("Duck: Strategy is set to simple quack.")
-    city_duck.do_some_business_logic()
-    print()
-
-    print("Duck: Strategy is set to no quack.")
-    city_duck.strategy = NoQuackStrategy()
-    city_duck.do_some_business_logic()
+robo.quack()  # QUACK! QUACK!!
+robo.lights_on()  # Lights on for 10 seconds
