@@ -3,6 +3,88 @@ from abc import ABC, abstractmethod
 from typing import List
 
 
+class Duck:
+    def quack(self):
+        pass
+
+    def display(self):
+        pass
+
+    def fly(self):
+        pass
+
+
+"""
+class WildDuck(Duck):
+    def display(self):
+        pass
+
+
+class CityDuck(Duck):
+    def display(self):
+        pass
+"""
+
+
+class IQuackBehaviour(ABC):
+
+    @abstractmethod
+    def quack(self) -> None:
+        pass
+
+
+class IFlyBehaviour(ABC):
+
+    @abstractmethod
+    def fly(self) -> None:
+        pass
+
+
+class IDisplayBehaviour(ABC):
+
+    @abstractmethod
+    def display(self) -> None:
+        pass
+
+
+class DisplayAsTextStrategy(IDisplayBehaviour):
+
+    # concrete stratge
+    def display(self) -> None:
+        print("*text*")
+
+
+class DisplayAsGraphicsStrategy(IDisplayBehaviour):
+    def display(self) -> None:
+        print("*graphic*")
+
+
+class SimpleFlyStrategy(IFlyBehaviour):
+    def fly(self) -> None:
+        print("*flatter...flatter*")
+
+
+class JetFlyStrategy(IFlyBehaviour):
+    def fly(self) -> None:
+        print("*zischhhhhhh*")
+
+
+class NoFlyStrategy(IFlyBehaviour):
+    def fly(self) -> None:
+        print("*zirp*")
+
+
+class SimpleQuackStrategy(IQuackBehaviour):
+    def quack(self) -> None:
+        print("Quack")
+
+
+class NoQuackStrategy(IQuackBehaviour):
+    def quack(self) -> None:
+        print("*zirp...zirp*")
+
+
+###############################################################
 class Context:
     """
     The Context defines the interface of interest to clients.
