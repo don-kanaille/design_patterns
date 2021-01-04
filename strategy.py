@@ -3,96 +3,14 @@ from abc import ABC, abstractmethod
 from typing import List
 
 
-class Duck:
-    def quack(self):
-        pass
-
-    def display(self):
-        pass
-
-    def fly(self):
-        pass
-
-
-"""
-class WildDuck(Duck):
-    def display(self):
-        pass
-
-
-class CityDuck(Duck):
-    def display(self):
-        pass
-"""
-
-
-class IQuackBehaviour(ABC):
-
-    @abstractmethod
-    def quack(self) -> None:
-        pass
-
-
-class IFlyBehaviour(ABC):
-
-    @abstractmethod
-    def fly(self) -> None:
-        pass
-
-
-class IDisplayBehaviour(ABC):
-
-    @abstractmethod
-    def display(self) -> None:
-        pass
-
-
-class DisplayAsTextStrategy(IDisplayBehaviour):
-
-    # concrete stratge
-    def display(self) -> None:
-        print("*text*")
-
-
-class DisplayAsGraphicsStrategy(IDisplayBehaviour):
-    def display(self) -> None:
-        print("*graphic*")
-
-
-class SimpleFlyStrategy(IFlyBehaviour):
-    def fly(self) -> None:
-        print("*flatter...flatter*")
-
-
-class JetFlyStrategy(IFlyBehaviour):
-    def fly(self) -> None:
-        print("*zischhhhhhh*")
-
-
-class NoFlyStrategy(IFlyBehaviour):
-    def fly(self) -> None:
-        print("*zirp*")
-
-
-class SimpleQuackStrategy(IQuackBehaviour):
-    def quack(self) -> None:
-        print("Quack")
-
-
-class NoQuackStrategy(IQuackBehaviour):
-    def quack(self) -> None:
-        print("*zirp...zirp*")
-
-
-###############################################################
-class Context:
+class Client:
     """
-    The Context defines the interface of interest to clients.
+    The Client defines the interface of interest to clients.
     """
 
     def __init__(self, strategy: Strategy) -> None:
         """
-        Usually, the Context accepts a strategy through the constructor, but
+        Usually, the Client accepts a strategy through the constructor, but
         also provides a setter to change it at runtime.
         """
 
@@ -101,8 +19,8 @@ class Context:
     @property
     def strategy(self) -> Strategy:
         """
-        The Context maintains a reference to one of the Strategy objects. The
-        Context does not know the concrete class of a strategy. It should work
+        The Client maintains a reference to one of the Strategy objects. The
+        Client does not know the concrete class of a strategy. It should work
         with all strategies via the Strategy interface.
         """
 
@@ -111,20 +29,20 @@ class Context:
     @strategy.setter
     def strategy(self, strategy: Strategy) -> None:
         """
-        Usually, the Context allows replacing a Strategy object at runtime.
+        Usually, the Client allows replacing a Strategy object at runtime.
         """
 
         self._strategy = strategy
 
     def do_some_business_logic(self) -> None:
         """
-        The Context delegates some work to the Strategy object instead of
+        The Client delegates some work to the Strategy object instead of
         implementing multiple versions of the algorithm on its own.
         """
 
         # ...
 
-        print("Context: Sorting data using the strategy (not sure how it'll do it)")
+        print("Client: Sorting data using the strategy (not sure how it'll do it)")
         result = self._strategy.do_algorithm(["a", "b", "c", "d", "e"])
         print(",".join(result))
 
@@ -136,7 +54,7 @@ class Strategy(ABC):
     The Strategy interface declares operations common to all supported versions
     of some algorithm.
 
-    The Context uses this interface to call the algorithm defined by Concrete
+    The Client uses this interface to call the algorithm defined by Concrete
     Strategies.
     """
 
@@ -147,7 +65,7 @@ class Strategy(ABC):
 
 """
 Concrete Strategies implement the algorithm while following the base Strategy
-interface. The interface makes them interchangeable in the Context.
+interface. The interface makes them interchangeable in the Client.
 """
 
 
@@ -166,7 +84,7 @@ if __name__ == "__main__":
     # The client should be aware of the differences between strategies in order
     # to make the right choice.
 
-    context = Context(ConcreteStrategyA())
+    context = Client(ConcreteStrategyA())
     print("Client: Strategy is set to normal sorting.")
     context.do_some_business_logic()
     print()
