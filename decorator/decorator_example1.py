@@ -1,4 +1,4 @@
-class Component():
+class Component:
     """
     The base Component interface defines operations that can be altered by
     decorators.
@@ -33,7 +33,7 @@ class Decorator(Component):
         self._component = component
 
     @property
-    def component(self) -> str:
+    def component(self) -> Component:
         """
         The Decorator delegates all work to the wrapped component.
         """
