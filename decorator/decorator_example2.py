@@ -27,9 +27,7 @@ class AddonDecorator(Beverage):
 
     @property
     def component(self) -> Beverage:
-        """
-        The Decorator delegates all work to the wrapped component.
-        """
+        """The Decorator delegates all work to the wrapped component."""
 
         return self._component
 
@@ -38,7 +36,7 @@ class AddonDecorator(Beverage):
 
 
 class Caramel(AddonDecorator):
-    """Concrete Decorator"""
+    """Concrete Decorator: Caramel"""
 
     def cost(self) -> float:
         """Adds the cost of 2.0"""
@@ -46,7 +44,7 @@ class Caramel(AddonDecorator):
 
 
 class Cream(AddonDecorator):
-    """Concrete Decorator"""
+    """Concrete Decorator : Cream"""
 
     def cost(self) -> float:
         """Adds the cost of 4.0"""
@@ -54,17 +52,9 @@ class Cream(AddonDecorator):
 
 
 def client_code(component: Beverage) -> None:
-    """
-    The client code works with all objects using the Component interface. This
-    way it can stay independent of the concrete classes of components it works
-    with.
-    """
-
-    # ...
+    """The client code."""
 
     print(f"RESULT: {component.cost()}", end="\n")
-
-    # ...
 
 
 if __name__ == "__main__":
