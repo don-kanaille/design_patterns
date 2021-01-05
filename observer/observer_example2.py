@@ -5,14 +5,18 @@ from typing import List
 
 class IObserver(ABC):
     """Interface Observable."""
+    def __init__(self, name: str):
+        self.__name__ = name
 
     @abstractmethod
-    def update(self, subject: IObservable) -> None:
+    def update_(self, subject: IObservable) -> None:
         pass
 
 
 class IObservable(ABC):
     """Interface Observer."""
+    def __init__(self, name: str):
+        self.__name__ = name
 
     @abstractmethod
     def add_(self, observer: IObserver) -> None:
@@ -30,7 +34,7 @@ class IObservable(ABC):
         pass
 
 
-class Weatherstation(IObservable):
+class WeatherStation(IObservable):
     """Observable."""
 
     # Initial State
@@ -40,32 +44,54 @@ class Weatherstation(IObservable):
 
     def add_(self, observer: IObserver) -> None:
         self._observers.append(observer)
-        print("Add observer: {}".format(str(observer)))
+        print("Add observer: {}".format(observer.__name__))
 
     def remove_(self, observer: IObserver) -> None:
         self._observers.remove(observer)
-        print("Remove observer: {}".format(str(observer)))
+        print("Remove observer: {}".format(observer.__name__))
 
     def notify_(self) -> None:
         print("Subject: Notifying observers...")
         for observer in self._observers:
             observer.update_(self)
 
-    def get_temperature(self) -> float:
-        return 0.0
+    @staticmethod
+    def get_temperature() -> float:
+        return 37.7
 
 
-class Phone1(IObserver):
+class IDisplay(ABC):
+    """Display Interface."""
+
+    @abstractmethod
+    def display(self, device) -> None:
+        pass
+
+
+class Phone1(IObserver, IDisplay):
     """Observer."""
     def update_(self, observer: IObservable) -> None:
-        print("Updating...")
+        print("Update: There was a change in Temperature in {}!".format(observer.__name__))
+        self.display(observer)
+
+    def display(self, device) -> None:
+        print("Display: {}".format(device.__name__))
 
 
-class Phone2(IObserver):
+class Phone2(IObserver, IDisplay):
     """Observer."""
     def update_(self, observer: IObservable) -> None:
-        print("Updating...")
+        print("Update: There was a change in Temperature in {}!".format(observer.__name__))
+        self.display(observer)
+
+    def display(self, device) -> None:
+        print("Display: {}".format(device.__name__))
 
 
 if __name__ == "__main__":
-    pass
+    weather_station = WeatherStation(name="weather_station")
+    phone1 = Phone1(name="phone1")
+    phone2 = Phone2(name="phone2")
+    weather_station.add_(phone1)
+    weather_station.add_(phone2)
+    weather_station.notify_()
